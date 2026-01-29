@@ -1,0 +1,5 @@
+../libraries/src/servo.c:3:7:servo_init	1
+../libraries/src/servo.c:8:6:servo_set_angle	6
+../libraries/src/servo.c:19:6:servo_move_smooth	5
+../libraries/src/servo.c:36:6:servo_set_speed	4
+../libraries/src/servo.c:46:7:servo_stop	4

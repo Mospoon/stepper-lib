@@ -1,0 +1,8 @@
+../libraries/src/UART_mec.c:16:6:UART_receive	8	static
+../libraries/src/UART_mec.c:22:19:UART_Transmit	24	static
+../libraries/src/UART_mec.c:32:7:UART_BytesToFloat	24	static
+../libraries/src/UART_mec.c:39:10:UART_FloatToBytes	24	static
+../libraries/src/UART_mec.c:46:6:UART_Prepare	24	static
+../libraries/src/UART_mec.c:65:6:UART_Process	72	static
+../libraries/src/UART_mec.c:209:6:HAL_UARTEx_RxEventCallback	16	static
+../libraries/src/UART_mec.c:220:6:HAL_UART_TxCpltCallback	16	static

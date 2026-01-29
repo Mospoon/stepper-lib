@@ -1,0 +1,5 @@
+../libraries/src/stepper.c:4:6:stepper_move	5
+../libraries/src/stepper.c:24:6:stepper_set_speed	5
+../libraries/src/stepper.c:38:6:stepper_stop	1
+../libraries/src/stepper.c:42:6:stepper_move_accel	6
+../libraries/src/stepper.c:68:6:stepper_update	12
