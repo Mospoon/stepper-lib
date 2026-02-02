@@ -71,73 +71,68 @@ void UART_Process(void)
 
     case CMD_STEPPER_MOVE:
     {
-        uint8_t  stepper_id = UART_MainBuffer[3];
+        uint8_t  stepper_mask = UART_MainBuffer[3];
         uint16_t steps      = (UART_MainBuffer[4] << 8) | UART_MainBuffer[5];
         float    speed      = UART_BytesToFloat(&UART_MainBuffer[6]);
         float    accel      = UART_BytesToFloat(&UART_MainBuffer[10]);
         uint8_t  dir        = UART_MainBuffer[14];
 
-        switch (stepper_id)
+        if (stepper_mask & 0x01)
         {
-            case 1:
-                stepper_move_accel(&stepper1, steps, (uint32_t)speed,
-                                   (uint32_t)accel, (dir_stepper_t)dir);
-                break;
+            stepper_move_accel(&stepper1, steps, (uint32_t)speed,
+                               (uint32_t)accel, (dir_stepper_t)dir);
+        }
 
-            case 2:
-                stepper_move_accel(&stepper2, steps, (uint32_t)speed,
-                                   (uint32_t)accel, (dir_stepper_t)dir);
-                break;
+        if (stepper_mask & 0x02)
+        {
+            stepper_move_accel(&stepper2, steps, (uint32_t)speed,
+                               (uint32_t)accel, (dir_stepper_t)dir);
+        }
 
-            case 3:
-                stepper_move_accel(&stepper3, steps, (uint32_t)speed,
-                                   (uint32_t)accel, (dir_stepper_t)dir);
-                break;
+        if (stepper_mask & 0x04)
+        {
+            stepper_move_accel(&stepper3, steps, (uint32_t)speed,
+                               (uint32_t)accel, (dir_stepper_t)dir);
+        }
 
-            case 4:
-                stepper_move_accel(&stepper4, steps, (uint32_t)speed,
-                                   (uint32_t)accel, (dir_stepper_t)dir);
-                break;
-
-            default:
-
-                break;
+        if (stepper_mask & 0x08)
+        {
+            stepper_move_accel(&stepper4, steps, (uint32_t)speed,
+                               (uint32_t)accel, (dir_stepper_t)dir);
         }
 
         UART_Prepare(CMD_STEPPER_MOVE, 0, 0);
         break;
     }
 
-
     case CMD_STEPPER_STOP:
     {
-        uint8_t stepper_id = UART_MainBuffer[3];
+        uint8_t stepper_mask = UART_MainBuffer[3];
 
-        switch (stepper_id)
-        {
-            case 1:
-                stepper_stop(&stepper1);
-                break;
 
-            case 2:
-                stepper_stop(&stepper2);
-                break;
+        if (stepper_mask & 0x01)
+                {
+        	stepper_stop(&stepper1);
+                }
 
-            case 3:
-                stepper_stop(&stepper3);
-                break;
+                if (stepper_mask & 0x02)
+                {
+                	stepper_stop(&stepper2);
+                }
 
-            case 4:
-                stepper_stop(&stepper4);
-                break;
+                if (stepper_mask & 0x04)
+                {
+                	stepper_stop(&stepper3);
+                }
 
-            default:
-                break;
-        }
-
+                if (stepper_mask & 0x08)
+                {
+                	stepper_stop(&stepper4);
+                }
         UART_Prepare(CMD_STEPPER_STOP, 0, 0);
         break;
     }
+
 
 
 
@@ -151,15 +146,45 @@ void UART_Process(void)
             break;
         }
         case CMD_SERVO_MOVE_SMOOTH:
-        {
-            uint8_t servo_id = UART_MainBuffer[3];
-            float angle      = UART_BytesToFloat(&UART_MainBuffer[4]);
-            float speed      = UART_BytesToFloat(&UART_MainBuffer[8]);
-            servo_t *s       = (servo_id==1) ? &servo1 : &servo2;
-            servo_move_smooth(s, angle, speed);
-            UART_Prepare(CMD_SERVO_MOVE_SMOOTH, 0, 0);
-            break;
-        }
+{
+    uint8_t servo_mask = UART_MainBuffer[3];
+    float angle        = UART_BytesToFloat(&UART_MainBuffer[4]);
+    float speed        = UART_BytesToFloat(&UART_MainBuffer[8]);
+
+    if (servo_mask & 0x01)   
+    {
+        servo_move_smooth(&servo1, angle, speed);
+    }
+
+    if (servo_mask & 0x02)   
+    {
+        servo_move_smooth(&servo2, angle, speed);
+    }
+
+    if (servo_mask & 0x04)   
+    {
+        servo_move_smooth(&servo3, angle, speed);
+    }
+
+    if (servo_mask & 0x08)   
+    {
+        servo_move_smooth(&servo4, angle, speed);
+    }
+
+    if (servo_mask & 0x10)   
+    {
+        servo_move_smooth(&servo5, angle, speed);
+    }
+
+    if (servo_mask & 0x20)   
+    {
+        servo_move_smooth(&servo6, angle, speed);
+    }
+
+    UART_Prepare(CMD_SERVO_MOVE_SMOOTH, 0, 0);
+    break;
+}
+
         case CMD_SERVO_SET_SPEED:
         {
             uint8_t servo_id = UART_MainBuffer[3];
@@ -169,14 +194,44 @@ void UART_Process(void)
             UART_Prepare(CMD_SERVO_SET_SPEED, 0, 0);
             break;
         }
-        case CMD_SERVO_STOP:
-        {
-            uint8_t servo_id = UART_MainBuffer[3];
-            servo_t *s = (servo_id==1) ? &servo1 : &servo2;
-            servo_stop(s);
-            UART_Prepare(CMD_SERVO_STOP, 0, 0);
-            break;
-        }
+       case CMD_SERVO_STOP:
+{
+    uint8_t servo_mask = UART_MainBuffer[3];
+
+    if (servo_mask & 0x01)   
+    {
+        servo_stop(&servo1);
+    }
+
+    if (servo_mask & 0x02)   
+    {
+        servo_stop(&servo2);
+    }
+
+    if (servo_mask & 0x04)   
+    {
+        servo_stop(&servo3);
+    }
+
+    if (servo_mask & 0x08)   
+    {
+        servo_stop(&servo4);
+    }
+
+    if (servo_mask & 0x10)   
+    {
+        servo_stop(&servo5);
+    }
+
+    if (servo_mask & 0x20)   
+    {
+        servo_stop(&servo6);
+    }
+
+    UART_Prepare(CMD_SERVO_STOP, 0, 0);
+    break;
+}
+
 
         case CMD_CHECK_STEPPER:
         {
