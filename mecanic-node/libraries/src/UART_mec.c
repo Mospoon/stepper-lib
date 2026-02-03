@@ -103,7 +103,6 @@ void UART_Process(void)
 
         UART_Prepare(CMD_STEPPER_MOVE, 0, 0);
         break;
-    }
 
     case CMD_STEPPER_STOP:
     {
@@ -135,7 +134,6 @@ void UART_Process(void)
 
 
 
-
         case CMD_SERVO_SET_ANGLE:
         {
             uint8_t servo_id = UART_MainBuffer[3];
@@ -146,44 +144,44 @@ void UART_Process(void)
             break;
         }
         case CMD_SERVO_MOVE_SMOOTH:
-{
-    uint8_t servo_mask = UART_MainBuffer[3];
-    float angle        = UART_BytesToFloat(&UART_MainBuffer[4]);
-    float speed        = UART_BytesToFloat(&UART_MainBuffer[8]);
+        {
+            uint8_t servo_mask = UART_MainBuffer[3];
+            float angle        = UART_BytesToFloat(&UART_MainBuffer[4]);
+            float speed        = UART_BytesToFloat(&UART_MainBuffer[8]);
 
-    if (servo_mask & 0x01)   
-    {
-        servo_move_smooth(&servo1, angle, speed);
-    }
+            if (servo_mask & 0x01)
+            {
+                servo_move_smooth(&servo1, angle, speed);
+            }
 
-    if (servo_mask & 0x02)   
-    {
-        servo_move_smooth(&servo2, angle, speed);
-    }
+            if (servo_mask & 0x02)
+            {
+                servo_move_smooth(&servo2, angle, speed);
+            }
 
-    if (servo_mask & 0x04)   
-    {
-        servo_move_smooth(&servo3, angle, speed);
-    }
+            if (servo_mask & 0x04)
+            {
+                servo_move_smooth(&servo3, angle, speed);
+            }
 
-    if (servo_mask & 0x08)   
-    {
-        servo_move_smooth(&servo4, angle, speed);
-    }
+            if (servo_mask & 0x08)
+            {
+                servo_move_smooth(&servo4, angle, speed);
+            }
 
-    if (servo_mask & 0x10)   
-    {
-        servo_move_smooth(&servo5, angle, speed);
-    }
+            if (servo_mask & 0x10)
+            {
+                servo_move_smooth(&servo5, angle, speed);
+            }
 
-    if (servo_mask & 0x20)   
-    {
-        servo_move_smooth(&servo6, angle, speed);
-    }
+            if (servo_mask & 0x20)
+            {
+                servo_move_smooth(&servo6, angle, speed);
+            }
 
-    UART_Prepare(CMD_SERVO_MOVE_SMOOTH, 0, 0);
-    break;
-}
+            UART_Prepare(CMD_SERVO_MOVE_SMOOTH, 0, 0);
+            break;
+        }
 
         case CMD_SERVO_SET_SPEED:
         {
@@ -194,44 +192,14 @@ void UART_Process(void)
             UART_Prepare(CMD_SERVO_SET_SPEED, 0, 0);
             break;
         }
-       case CMD_SERVO_STOP:
-{
-    uint8_t servo_mask = UART_MainBuffer[3];
-
-    if (servo_mask & 0x01)   
-    {
-        servo_stop(&servo1);
-    }
-
-    if (servo_mask & 0x02)   
-    {
-        servo_stop(&servo2);
-    }
-
-    if (servo_mask & 0x04)   
-    {
-        servo_stop(&servo3);
-    }
-
-    if (servo_mask & 0x08)   
-    {
-        servo_stop(&servo4);
-    }
-
-    if (servo_mask & 0x10)   
-    {
-        servo_stop(&servo5);
-    }
-
-    if (servo_mask & 0x20)   
-    {
-        servo_stop(&servo6);
-    }
-
-    UART_Prepare(CMD_SERVO_STOP, 0, 0);
-    break;
-}
-
+        case CMD_SERVO_STOP:
+        {
+            uint8_t servo_id = UART_MainBuffer[3];
+            servo_t *s = (servo_id==1) ? &servo1 : &servo2;
+            servo_stop(s);
+            UART_Prepare(CMD_SERVO_STOP, 0, 0);
+            break;
+        }
 
         case CMD_CHECK_STEPPER:
         {
@@ -250,6 +218,31 @@ void UART_Process(void)
             UART_Prepare(CMD_CHECK_STEPPER, &status, 1);
             break;
         }
+        case CMD_CHECK_ANGLE:
+               {
+                   uint8_t SERVO_id = UART_MainBuffer[3];
+                   uint8_t status ;
+
+                   switch (ANGLE_id)
+                   {
+                       case 1: status = servo1.current_angle; break;
+                       case 2: status = servo2.current_angle; break;
+                       case 3: status = servo3.current_angle; break;
+                       case 4: status = servo4.current_angle; break;
+                       case 5: status = servo5.current_angle; break;
+                       case 6: status = servo6.current_angle; break;
+                       
+                       
+                     
+                                            
+                       
+                       default: break;
+                   }
+
+                   UART_Prepare(CMD_CHECK_ANGLE, &status, 1);
+                   break;
+               }
+        
 
 
 
